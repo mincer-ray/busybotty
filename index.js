@@ -22,7 +22,10 @@ const slackEvents = createEventAdapter(slackSigningSecret);
 const app = express();
 
 // Plug the adapter in as a middleware
-app.use('/my/path', slackEvents.requestListener());
+app.use('/my/path', (req, res, next) => {
+  console.log(req.data);
+  return slackEvents.requestListener()
+});
 
 // Example: If you're using a body parser, always put it after the event adapter in the middleware stack
 app.use(bodyParser.json());
@@ -30,24 +33,21 @@ app.use(bodyParser.json());
 // Initialize a server for the express app - you can skip this and the rest if you prefer to use app.listen()
 const server = createServer(app);
 const io = require('socket.io')(server);
-io.on('connection', () => { console.log('connection') });
-server.listen(port, () => {
-  // Log a message when the server is ready
-  console.log(`Listening for events on ${server.address().port}`);
-});
 
-// const app = new App({
-//   signingSecret: secrets.SLACK_SIGNING_SECRET,
-//   token: secrets.SLACK_BOT_TOKEN,
-// });
+const client = require('socket.io-client');
+const socket = client('https://busybotty.herokuapp.com');
 
-// app.event('message', () => {
-//   console.log(...args);
-// });
-
-// (async () => {
-//   // Start the app
-//   await app.start(process.env.PORT || 3000);
-
-//   console.log('⚡️ BusyBotty on the job!');
-// })();
+if (process.env.BOT_ENV === 'PRODUCTION') {
+  io.on('connection', () => {
+    console.log('connection');
+    io.send('lets do this');
+  });
+  server.listen(port, () => {
+    // Log a message when the server is ready
+    console.log(`Listening for events on ${server.address().port}`);
+  });
+} else {
+  socket.on('connect', function(){
+    console.log('we in boys');
+  });
+}
