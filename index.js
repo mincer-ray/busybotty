@@ -1,12 +1,11 @@
-const { App } = require('@slack/bolt');
-
 let secrets = null;
 if (process.env.BOT_ENV === 'PRODUCTION') {
   secrets = {
     SLACK_SIGNING_SECRET: process.env.SLACK_SIGNING_SECRET,
-    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,  
-  }
+    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+  };
 } else {
+  // eslint-disable-next-line
   secrets = require('./secrets');
 }
 
@@ -14,6 +13,7 @@ const { createServer } = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createEventAdapter } = require('@slack/events-api');
+
 const slackSigningSecret = secrets.SLACK_SIGNING_SECRET;
 const port = process.env.PORT || 3000;
 const slackEvents = createEventAdapter(slackSigningSecret);
@@ -28,14 +28,14 @@ slackEvents.on('message', (event) => {
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 });
 
-// Example: If you're using a body parser, always put it after the event adapter in the middleware stack
+// always put bodyParser it after the event adapter in the middleware stack
 app.use(bodyParser.json());
 
-// Initialize a server for the express app - you can skip this and the rest if you prefer to use app.listen()
 const server = createServer(app);
 const io = require('socket.io')(server);
 
 const client = require('socket.io-client');
+
 const socket = client('https://busybotty.herokuapp.com');
 
 // if (true) {
@@ -52,7 +52,10 @@ if (process.env.BOT_ENV === 'PRODUCTION') {
     console.log(`Listening for events on ${server.address().port}`);
   });
 } else {
-  socket.on('connect', function(){
+  socket.on('connect', () => {
     console.log('we in boys');
+  });
+  socket.on('message', (data) => {
+    console.log(data);
   });
 }
