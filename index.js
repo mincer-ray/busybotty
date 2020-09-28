@@ -23,7 +23,7 @@ const app = express();
 
 // Plug the adapter in as a middleware
 app.use('/my/path', (req, res, next) => {
-  console.log(req.data);
+  console.log(req.body);
   return slackEvents.requestListener()
 });
 
