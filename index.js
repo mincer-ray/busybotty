@@ -22,9 +22,10 @@ const slackEvents = createEventAdapter(slackSigningSecret);
 const app = express();
 
 // Plug the adapter in as a middleware
-app.use('/my/path', (req, res, next) => {
-  console.log(req.body);
-  return slackEvents.requestListener()
+app.use('/bot/listen', slackEvents.requestListener());
+
+slackEvents.on('message', (event) => {
+  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 });
 
 // Example: If you're using a body parser, always put it after the event adapter in the middleware stack
@@ -37,10 +38,14 @@ const io = require('socket.io')(server);
 const client = require('socket.io-client');
 const socket = client('https://busybotty.herokuapp.com');
 
+// if (true) {
 if (process.env.BOT_ENV === 'PRODUCTION') {
   io.on('connection', () => {
     console.log('connection');
     io.send('lets do this');
+  });
+  slackEvents.on('message', (event) => {
+    io.send(event);
   });
   server.listen(port, () => {
     // Log a message when the server is ready
