@@ -9,6 +9,8 @@ if (process.env.BOT_ENV === 'PRODUCTION') {
   secrets = require('./secrets');
 }
 
+const axios = require('axios');
+
 const { createServer } = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -24,7 +26,34 @@ const app = express();
 // Plug the adapter in as a middleware
 app.use('/bot/listen', slackEvents.requestListener());
 
+const sendMessage = (channel, text) => axios.post('https://slack.com/api/chat.postMessage',
+  {
+    // token: secrets.SLACK_BOT_TOKEN,
+    channel,
+    text,
+  },
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${secrets.SLACK_BOT_TOKEN}`,
+    }
+  }
+)
+.then(function (response) {
+  console.log(response.data);
+})
+.catch(function (error) {
+  console.log(error);
+});
+
+const handleEvent = (event) => {
+  if (event.text && event.text.startsWith('<@U01BF0S1YAH>')) {
+    sendMessage(event.channel, `I hear you ${event.user}`);
+  }
+}
+
 slackEvents.on('message', (event) => {
+  handleEvent(event);
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 });
 
@@ -55,7 +84,8 @@ if (process.env.BOT_ENV === 'PRODUCTION') {
   socket.on('connect', () => {
     console.log('we in boys');
   });
-  socket.on('message', (data) => {
-    console.log(data);
+  socket.on('message', (event) => {
+    handleEvent(event);
+    console.log(event);
   });
 }
