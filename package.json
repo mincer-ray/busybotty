@@ -1,0 +1,21 @@
+{
+  "name": "busybotty",
+  "version": "0.0.1",
+  "description": "configurable slackbot",
+  "main": "index.js",
+  "scripts": {
+    "start": "BOT_ENV=PRODUCTION node index.js",
+    "dev": "BOT_ENV=DEVELOPMENT nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "slackbot"
+  ],
+  "author": "Peter De Genaro",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^2.3.0",
+    "nodemon": "^2.0.4",
+    "ws": "^7.3.1"
+  }
+}
