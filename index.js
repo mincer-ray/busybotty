@@ -13,9 +13,9 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
 
 if (process.env.BOT_ENV === 'PRODUCTION') {
   // process.env.GOOGLE = JSON.parse(process.env.GOOGLE)
-  const stringy = process.env.GOOGLE.toString();
+  // const stringy = process.env.GOOGLE.toString();
 
-  process.env.GOOGLE = stringy.replace(/\\n/g, '\n');
+  // process.env.GOOGLE = stringy.replace(/\\n/g, '\n');
 }
 
 // write json file for piiiicky google
