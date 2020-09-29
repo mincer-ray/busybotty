@@ -11,13 +11,6 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   process.env.GOOGLE = secrets.GOOGLE;
 }
 
-if (process.env.BOT_ENV === 'PRODUCTION') {
-  // process.env.GOOGLE = JSON.parse(process.env.GOOGLE)
-  // const stringy = process.env.GOOGLE.toString();
-
-  // process.env.GOOGLE = stringy.replace(/\\n/g, '\n');
-}
-
 // write json file for piiiicky google
 fs.writeFileSync('./service-account.json', process.env.GOOGLE);
 process.env.GOOGLE_APPLICATION_CREDENTIALS = './service-account.json';
@@ -29,6 +22,7 @@ const bodyParser = require('body-parser');
 const { createEventAdapter } = require('@slack/events-api');
 const ioServer = require('socket.io');
 const ioClient = require('socket.io-client');
+const firebaseAdmin = require('firebase-admin');
 
 // require our cool stuff (not junk)
 const handleEvent = require('./src/handlers/handleEvent');
@@ -37,15 +31,14 @@ const getChannelList = require('./src/util/getChannelList');
 
 const port = process.env.PORT || 3000;
 
-var admin = require('firebase-admin');
-// Your web app's Firebase configuration
-var firebaseConfig = {
+// Init firebase service account
+const firebaseConfig = {
   databaseURL: process.env.DB_URL,
 };
-admin.initializeApp(firebaseConfig);
+firebaseAdmin.initializeApp(firebaseConfig);
 
 // DB test code
-const database = admin.database();
+const database = firebaseAdmin.database();
 database.ref(`ping/${process.env.BOT_ENV}`).set(new Date(Date.now()).toString());
 
 // Init the slack events api listener
