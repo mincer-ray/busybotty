@@ -1,76 +1,61 @@
-let secrets = null;
-if (process.env.BOT_ENV === 'PRODUCTION') {
-  secrets = {
-    SLACK_SIGNING_SECRET: process.env.SLACK_SIGNING_SECRET,
-    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
-  };
-} else {
+// Do secrets for dev mode
+if (process.env.BOT_ENV !== 'PRODUCTION') {
   // eslint-disable-next-line
-  secrets = require('./secrets');
+  const secrets = require('./secrets');
+  process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
+  process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
 }
 
-const axios = require('axios');
-
+// require junk
 const { createServer } = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createEventAdapter } = require('@slack/events-api');
 
-const slackSigningSecret = secrets.SLACK_SIGNING_SECRET;
+// require our handler
+const handleEvent = require('./src/handlers/handleEvent');
+
 const port = process.env.PORT || 3000;
+
+// Init the slack events api listener
+const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackEvents = createEventAdapter(slackSigningSecret);
 
 // Create an express application
 const app = express();
 
 // Plug the adapter in as a middleware
+// Slack is using this route to HTTP POST events
 app.use('/bot/listen', slackEvents.requestListener());
 
-const sendMessage = (channel, text) => axios.post('https://slack.com/api/chat.postMessage',
-  {
-    // token: secrets.SLACK_BOT_TOKEN,
-    channel,
-    text,
-  },
-  {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${secrets.SLACK_BOT_TOKEN}`,
-    }
-  }
-)
-.then(function (response) {
-  console.log(response.data);
-})
-.catch(function (error) {
-  console.log(error);
-});
-
-const handleEvent = (event) => {
-  if (event.text && event.text.startsWith('<@U01BF0S1YAH>')) {
-    sendMessage(event.channel, `I hear you ${event.user}`);
-  }
-}
-
+// event type that slackEvents.requestListener is waiting for
+// on the '/bot/listen' route
 slackEvents.on('message', (event) => {
   handleEvent(event);
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 });
 
-// always put bodyParser it after the event adapter in the middleware stack
+// always put bodyParser after the slackEvents.requestListener in the middleware stack
+// docs say if you dont do the right order everything breaks
 app.use(bodyParser.json());
 
+// Init socket.io server
 const server = createServer(app);
 const io = require('socket.io')(server);
 
+// Init socket.io client
 const client = require('socket.io-client');
-
 const socket = client('https://busybotty.herokuapp.com');
 
-// if (true) {
+// Slack only allows you to add ONE SINGLE URL for a bot to get events
+// This is a TURBO BUMMER if you want to do local dev
+// We are doing a workaround here where the production app forwards events
 if (process.env.BOT_ENV === 'PRODUCTION') {
+  // If this is the production app we want to start up the server
+  // AND we want to set up socket.io to send events it recieves
+  // to the client for local dev
   io.on('connection', () => {
-    console.log('connection');
+    console.log('new connection');
     io.send('lets do this');
   });
   slackEvents.on('message', (event) => {
@@ -81,6 +66,9 @@ if (process.env.BOT_ENV === 'PRODUCTION') {
     console.log(`Listening for events on ${server.address().port}`);
   });
 } else {
+  // If we are in dev we don't bother starting the server
+  // Instead we listen to the live version for events with
+  // the socket.io client
   socket.on('connect', () => {
     console.log('we in boys');
   });
