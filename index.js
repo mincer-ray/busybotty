@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 // Do secrets for dev mode
-if (process.env.BOT_ENV !== 'PRODUCTION') {
+if (process.env.BOT_ENV === 'DEVELOPMENT') {
   console.log('DOIND SECRET');
   // eslint-disable-next-line
   const secrets = require('./secrets');
@@ -9,6 +9,10 @@ if (process.env.BOT_ENV !== 'PRODUCTION') {
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
   process.env.DB_URL = secrets.DB_URL;
   process.env.GOOGLE = secrets.GOOGLE;
+}
+
+if (process.env.BOT_ENV === 'PRODUCTION') {
+  process.env.GOOGLE = process.env.GOOGLE.replace(/\\n/g, '\n');
 }
 
 // write json file for piiiicky google
