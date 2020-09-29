@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 // Do secrets for dev mode
 if (process.env.BOT_ENV !== 'PRODUCTION') {
   console.log('DOIND SECRET');
@@ -5,7 +7,13 @@ if (process.env.BOT_ENV !== 'PRODUCTION') {
   const secrets = require('./secrets');
   process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
+  process.env.DB_URL = secrets.DB_URL;
+  process.env.GOOGLE = secrets.GOOGLE;
 }
+
+// write json file for piiiicky google
+fs.writeFileSync('./service-account.json', process.env.GOOGLE);
+process.env.GOOGLE_APPLICATION_CREDENTIALS = './service-account.json';
 
 // require junk
 const { createServer } = require('http');
@@ -21,6 +29,17 @@ const getUserList = require('./src/util/getUserList');
 const getChannelList = require('./src/util/getChannelList');
 
 const port = process.env.PORT || 3000;
+
+var admin = require('firebase-admin');
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  databaseURL: process.env.DB_URL,
+};
+admin.initializeApp(firebaseConfig);
+
+// DB test code
+const database = admin.database();
+database.ref(`ping/${process.env.BOT_ENV}`).set(new Date(Date.now()).toString());
 
 // Init the slack events api listener
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
