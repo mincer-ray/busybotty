@@ -18,6 +18,6 @@ const getChannelList = () => new Promise((resolve, reject) => {
     .catch((error) => {
       reject(error);
     });
-})
+});
 
 module.exports = getChannelList;

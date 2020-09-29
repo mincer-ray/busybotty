@@ -2,20 +2,19 @@ const commands = [
   'ping',
   'salute',
   'mode',
-]
+];
 
-const isValidCommand = (command) => {
-  return commands.includes(command);
-}
+const isValidCommand = (command) => commands.includes(command);
 
 const parseCommand = (event) => {
   let command = null;
-  const text = event.text;
+  const { text } = event;
   const botName = '<@U01BF0S1YAH>';
-  const args = event.text.split(' ');
-  
-  if (args[0] === botName) {
-    command = args[1];
+  const args = text.split(' ');
+  const [first, second] = args;
+
+  if (first === botName) {
+    command = second;
   }
 
   if (isValidCommand(command)) {
@@ -23,10 +22,10 @@ const parseCommand = (event) => {
     return {
       type: command,
       args: commandArgs,
-    }
+    };
   }
 
   return null;
-}
+};
 
 module.exports = parseCommand;

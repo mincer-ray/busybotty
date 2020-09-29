@@ -18,6 +18,6 @@ const getUserList = () => new Promise((resolve, reject) => {
     .catch((error) => {
       reject(error);
     });
-})
+});
 
 module.exports = getUserList;

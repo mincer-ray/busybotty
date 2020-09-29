@@ -83,4 +83,4 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
       console.log(event);
     });
   }
-})
+});

@@ -14,6 +14,6 @@ const doCommand = (command, event) => {
     default:
       sendMessage(event.channel, `command ${command.type} is somehow valid and also not?`);
   }
-}
+};
 
 module.exports = doCommand;
