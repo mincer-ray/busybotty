@@ -6,7 +6,8 @@
   "scripts": {
     "start": "BOT_ENV=PRODUCTION node index.js",
     "dev": "BOT_ENV=DEVELOPMENT nodemon index.js",
-    "lint": "npx eslint . --fix"
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
   },
   "keywords": [
     "slackbot"
