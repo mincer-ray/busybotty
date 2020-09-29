@@ -13,7 +13,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
 
 if (process.env.BOT_ENV === 'PRODUCTION') {
   // process.env.GOOGLE = JSON.parse(process.env.GOOGLE)
-  console.log(JSON.parse(process.env.GOOGLE));
+  console.log(JSON.parse(process.env.GOOGLE.replace(/\\n/g, '\n')));
   process.env.GOOGLE = process.env.GOOGLE.replace(/\\n/g, '\n');
 }
 
