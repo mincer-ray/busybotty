@@ -1,9 +1,16 @@
 const sendMessage = require('../actions/sendMessage');
+const doCommand = require('../actions/doCommand');
 const translateUser = require('../util/translateUser');
+const parseCommand = require('../util/parseCommand');
 
 const handleEvent = (event) => {
   if (event.text && event.text.startsWith('<@U01BF0S1YAH>')) {
-    sendMessage(event.channel, `I hear you ${translateUser(event.user)}`);
+    const command = parseCommand(event);
+    if (command) {
+      doCommand(command, event);
+    } else {
+      sendMessage(event.channel, `I hear you ${translateUser(event.user)}`);
+    }
   }
 };
 
