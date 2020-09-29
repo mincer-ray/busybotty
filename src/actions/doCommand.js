@@ -8,6 +8,9 @@ const doCommand = (command, event) => {
     case 'salute':
       sendMessage(event.channel, 'o7');
       break;
+    case 'mode':
+      sendMessage(event.channel, `running in ${process.env.BOT_ENV} mode`);
+      break;
     default:
       sendMessage(event.channel, `command ${command.type} is somehow valid and also not?`);
   }

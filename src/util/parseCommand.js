@@ -1,6 +1,7 @@
 const commands = [
   'ping',
   'salute',
+  'mode',
 ]
 
 const isValidCommand = (command) => {

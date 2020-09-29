@@ -48,9 +48,6 @@ app.use(bodyParser.json());
 const server = createServer(app);
 const io = ioServer(server);
 
-// Init socket.io client
-const socket = ioClient('https://busybotty.herokuapp.com');
-
 // Init data into memory so we don't have to do this all the time
 Promise.all([getUserList(), getChannelList()]).then(() => {
   // Slack only allows you to add ONE SINGLE URL for a bot to get events
@@ -62,7 +59,7 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
     // to the client for local dev
     io.on('connection', () => {
       console.log('new connection');
-      io.send('lets do this');
+      io.send('!!location confirmed, sending supplies!!');
     });
     slackEvents.on('message', (event) => {
       io.send(event);
@@ -75,8 +72,11 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
     // If we are in dev we don't bother starting the server
     // Instead we listen to the live version for events with
     // the socket.io client
+    // Init socket.io client
+    const socket = ioClient('https://busybotty.herokuapp.com');
+
     socket.on('connect', () => {
-      console.log('we in boys');
+      console.log('*hacker voice* I\'m in');
     });
     socket.on('message', (event) => {
       handleEvent(event);
