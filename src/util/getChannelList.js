@@ -1,8 +1,8 @@
 const axios = require('axios');
 const cache = require('memory-cache');
 
-const getUserList = () => new Promise((resolve, reject) => {
-  axios.get('https://slack.com/api/users.list',
+const getChannelList = () => new Promise((resolve, reject) => {
+  axios.get('https://slack.com/api/conversations.list',
     {
       headers: {
         'Content-Type': 'application/json',
@@ -11,8 +11,8 @@ const getUserList = () => new Promise((resolve, reject) => {
     })
     .then((response) => {
       const niceData = {};
-      response.data.members.forEach((user) => { niceData[user.id] = user.profile.display_name; });
-      cache.put('users', niceData);
+      response.data.channels.forEach((channel) => { niceData[channel.id] = channel.name; });
+      cache.put('channels', niceData);
       resolve();
     })
     .catch((error) => {
@@ -20,4 +20,4 @@ const getUserList = () => new Promise((resolve, reject) => {
     });
 })
 
-module.exports = getUserList;
+module.exports = getChannelList;
