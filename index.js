@@ -4,7 +4,7 @@ const fs = require('fs');
 if (process.env.BOT_ENV === 'DEVELOPMENT') {
   console.log('DOIND SECRET');
   // eslint-disable-next-line
-  const secrets = require('./secrets');
+  const secrets = require('./secrets-local');
   process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
   process.env.DB_URL = secrets.DB_URL;
