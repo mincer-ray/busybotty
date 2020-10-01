@@ -23,25 +23,25 @@ const feelingsMatrix = {
     '(・_・;)',
     'ლ(ಠ_ಠ ლ)',
   ],
-}
+};
 
 const randomFeel = (emotion) => {
   const feelArray = feelingsMatrix[emotion];
-  return feelArray[Math.floor(Math.random() * feelArray.length)]
-}
+  return feelArray[Math.floor(Math.random() * feelArray.length)];
+};
 
 const respondEmotionally = (event) => {
   const sentiment = new Sentiment();
   const result = sentiment.analyze(event.text);
   let emotion = 'neutral';
-  
+
   if (result.comparative >= 1) {
     emotion = 'positive';
-  } else if (result.comparative <= -1) { 
+  } else if (result.comparative <= -1) {
     emotion = 'negative';
   }
 
   sendMessage(event.channel, randomFeel(emotion));
-}
+};
 
 module.exports = respondEmotionally;

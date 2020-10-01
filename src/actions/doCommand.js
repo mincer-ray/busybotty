@@ -10,6 +10,8 @@ const doCommand = (command, event, database) => {
       const cmd = commands[type];
       return `\`${type}\`: ${cmd.help}`;
     });
+    helpSpam.unshift('BusyBotty is here to help! Check out these commands:');
+    helpSpam.push('You can also @ me with any message and I will respond emotionally.');
     sendMessage(event.channel, helpSpam.join('\n'));
   } else {
     // you should never see this

@@ -1,8 +1,7 @@
 const cache = require('memory-cache');
-const sendMessage = require('../actions/sendMessage');
 const doCommand = require('../actions/doCommand');
-const parseCommand = require('../util/parseCommand');
 const respondEmotionally = require('../actions/respondEmotionally');
+const parseCommand = require('../util/parseCommand');
 
 const handleEvent = (event, database) => {
   if (event.text && event.text.startsWith(`<@${cache.get('botname')}>`)) {
@@ -19,7 +18,6 @@ const handleEvent = (event, database) => {
       doCommand(command, event, database);
     } else {
       respondEmotionally(event);
-      // sendMessage(event.channel, 'I hear you');
     }
   }
 };
