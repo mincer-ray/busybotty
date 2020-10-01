@@ -25,7 +25,7 @@ const leaderboard = {
         sendMessage(event.channel, `${topList.join('\n')}`);
       });
   },
-  help: 'give someone a point to be nice',
+  help: 'top 10 point values and the people who have them',
 };
 
 module.exports = leaderboard;

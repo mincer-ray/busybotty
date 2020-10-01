@@ -8,7 +8,7 @@ const doCommand = (command, event, database) => {
     const types = Object.keys(commands);
     const helpSpam = types.map((type) => {
       const cmd = commands[type];
-      return `${type}: ${cmd.help}`;
+      return `\`${type}\`: ${cmd.help}`;
     });
     sendMessage(event.channel, helpSpam.join('\n'));
   } else {
