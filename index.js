@@ -55,7 +55,7 @@ app.use('/bot/listen', slackEvents.requestListener());
 // event type that slackEvents.requestListener is waiting for
 // on the '/bot/listen' route
 slackEvents.on('message', (event) => {
-  handleEvent(event);
+  handleEvent(event, database);
   console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
 });
 
@@ -98,7 +98,7 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
       console.log('*hacker voice* I\'m in');
     });
     socket.on('message', (event) => {
-      handleEvent(event);
+      handleEvent(event, database);
       console.log(event);
     });
   }

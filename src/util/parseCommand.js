@@ -1,4 +1,5 @@
 const commands = [
+  'synctime',
   'ping',
   'salute',
   'mode',

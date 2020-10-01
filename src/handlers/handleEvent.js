@@ -4,7 +4,7 @@ const doCommand = require('../actions/doCommand');
 const translateUser = require('../util/translateUser');
 const parseCommand = require('../util/parseCommand');
 
-const handleEvent = (event) => {
+const handleEvent = (event, database) => {
   if (event.text && event.text.startsWith('<@U01BF0S1YAH>')) {
     const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
     if (process.env.BOT_ENV === 'PRODUCTION' && isDevChannel) {
@@ -16,7 +16,7 @@ const handleEvent = (event) => {
 
     const command = parseCommand(event);
     if (command) {
-      doCommand(command, event);
+      doCommand(command, event, database);
     } else {
       sendMessage(event.channel, `I hear you ${translateUser(event.user)}`);
     }
