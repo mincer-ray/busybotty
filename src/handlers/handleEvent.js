@@ -5,7 +5,7 @@ const translateUser = require('../util/translateUser');
 const parseCommand = require('../util/parseCommand');
 
 const handleEvent = (event, database) => {
-  if (event.text && event.text.startsWith('<@U01BF0S1YAH>')) {
+  if (event.text && event.text.startsWith(`<@${cache.get('botname')}>`)) {
     const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
     if (process.env.BOT_ENV === 'PRODUCTION' && isDevChannel) {
       return;
