@@ -10,6 +10,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   process.env.DB_URL = secrets.DB_URL;
   process.env.GOOGLE = secrets.GOOGLE;
   process.env.LOCAL_DEV_TOKEN = secrets.LOCAL_DEV_TOKEN;
+  process.env.LOCAL_DEV_URL = secrets.LOCAL_DEV_URL
 }
 
 // write json file for piiiicky google
@@ -103,7 +104,7 @@ Promise.all([
     // Instead we listen to the live version for events with
     // the socket.io client
     // Init socket.io client
-    const socket = ioClient('https://busybotty.herokuapp.com', {
+    const socket = ioClient(process.env.LOCAL_DEV_URL, {
       extraHeaders: {
         Authorization: `${process.env.LOCAL_DEV_TOKEN}`
       }
