@@ -11,7 +11,7 @@ const getUserList = () => new Promise((resolve, reject) => {
     })
     .then((response) => {
       const niceData = {};
-      response.data.members.forEach((user) => { niceData[user.id] = user.profile.display_name; });
+      response.data.members.forEach((user) => { niceData[user.id] = user.profile.name; });
       cache.put('users', niceData);
       resolve();
     })

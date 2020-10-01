@@ -1,7 +1,6 @@
 const cache = require('memory-cache');
 const sendMessage = require('../actions/sendMessage');
 const doCommand = require('../actions/doCommand');
-const translateUser = require('../util/translateUser');
 const parseCommand = require('../util/parseCommand');
 
 const handleEvent = (event, database) => {
@@ -18,7 +17,7 @@ const handleEvent = (event, database) => {
     if (command) {
       doCommand(command, event, database);
     } else {
-      sendMessage(event.channel, `I hear you ${translateUser(event.user)}`);
+      sendMessage(event.channel, 'I hear you');
     }
   }
 };

@@ -42,7 +42,7 @@ firebaseAdmin.initializeApp(firebaseConfig);
 
 // DB test code
 const database = firebaseAdmin.database();
-database.ref(`ping/${process.env.BOT_ENV}`).set(new Date(Date.now()).toString());
+database.ref(`${process.env.BOT_ENV}/ping`).set(new Date(Date.now()).toString());
 
 // Init the slack events api listener
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;

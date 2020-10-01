@@ -2,10 +2,9 @@ const sendMessage = require('../actions/sendMessage');
 
 const get = {
   do: (args, event, database) => {
-    database.ref(`storage/${process.env.BOT_ENV}/${args[0]}`)
+    database.ref(`${process.env.BOT_ENV}/storage/${args[0]}`)
       .once('value')
       .then((snapshot) => {
-        console.log(snapshot);
         sendMessage(event.channel, `${snapshot.val()}`);
       });
   },
