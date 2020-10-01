@@ -115,7 +115,6 @@ Promise.all([
     });
     socket.on('message', (event) => {
       handleEvent(event, database);
-      console.log(event);
     });
   }
 });

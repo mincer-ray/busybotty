@@ -12,7 +12,7 @@ const sendMessage = (channel, text) => axios.post('https://slack.com/api/chat.po
     },
   })
   .then((response) => {
-    console.log(response.data);
+    console.log('message sent: ', response.data);
   })
   .catch((error) => {
     console.log(error);

@@ -13,6 +13,8 @@ const handleEvent = (event, database) => {
       return;
     }
 
+    console.log('event heard: ', event);
+
     const command = parseCommand(event);
     if (command) {
       doCommand(command, event, database);
