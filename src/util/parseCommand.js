@@ -1,13 +1,10 @@
-const commands = [
-  'synctime',
-  'ping',
-  'salute',
-  'mode',
-  'get',
-  'set',
-];
+const commands = require('../commands');
 
-const isValidCommand = (command) => commands.includes(command);
+const isValidCommand = (command) => {
+  const types = Object.keys(commands);
+  types.push('help');
+  return types.includes(command);
+};
 
 const parseCommand = (event) => {
   let command = null;
