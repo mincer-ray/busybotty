@@ -68,9 +68,8 @@ app.use(bodyParser.json());
 const server = createServer(app);
 const io = ioServer(server, {
   allowRequest: (handshake, callback) => {
-    console.log('headers', handshake.headers);
     const isValid = handshake.headers.authorization === process.env.LOCAL_DEV_TOKEN;
-    callback(null, isValid);
+    callback(401, isValid);
   }
 });
 
