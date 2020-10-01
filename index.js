@@ -8,7 +8,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
   process.env.DB_URL = secrets.DB_URL;
-  process.env.GOOGLE = secrets.GOOGLE;
+  process.env.GOOGLE = JSON.stringify(secrets.GOOGLE);
   process.env.LOCAL_DEV_TOKEN = secrets.LOCAL_DEV_TOKEN;
   process.env.LOCAL_DEV_URL = secrets.LOCAL_DEV_URL;
 }
