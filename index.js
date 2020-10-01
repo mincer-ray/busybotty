@@ -69,7 +69,8 @@ const server = createServer(app);
 const io = ioServer(server, {
   allowRequest: (handshake, callback) => {
     console.log('headers', handshake.headers);
-    callback(null, true);
+    const isValid = handshake.headers.authorization === process.env.LOCAL_DEV_TOKEN;
+    callback(null, isValid);
   }
 });
 
@@ -100,7 +101,7 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
     // Init socket.io client
     const socket = ioClient('https://busybotty.herokuapp.com', {
       extraHeaders: {
-        Authorization: `Bearer ${process.env.LOCAL_DEV_TOKEN}`
+        Authorization: `${process.env.LOCAL_DEV_TOKEN}`
       }
     });
 
