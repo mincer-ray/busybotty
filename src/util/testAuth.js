@@ -10,7 +10,6 @@ const testAuth = () => new Promise((resolve, reject) => {
       },
     })
     .then((response) => {
-      const niceData = {};
       cache.put('botname', response.data.user_id);
       resolve();
     })

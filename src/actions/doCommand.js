@@ -1,6 +1,5 @@
 const sendMessage = require('./sendMessage');
 const commands = require('../commands');
-const { help } = require('../commands/get');
 
 const doCommand = (command, event, database) => {
   if (commands[command.type]) {
@@ -10,7 +9,7 @@ const doCommand = (command, event, database) => {
     const helpSpam = types.map((type) => {
       const cmd = commands[type];
       return `${type}: ${cmd.help}`;
-    })
+    });
     sendMessage(event.channel, helpSpam.join('\n'));
   } else {
     sendMessage(event.channel, `command ${command.type} is somehow valid and also not?`);

@@ -6,10 +6,10 @@ const get = {
       .once('value')
       .then((snapshot) => {
         console.log(snapshot);
-        sendMessage(event.channel, `${snapshot.val()}`)
+        sendMessage(event.channel, `${snapshot.val()}`);
       });
   },
   help: 'gets your data you set with the SET command',
-}
+};
 
 module.exports = get;

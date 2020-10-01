@@ -1,4 +1,3 @@
-const { request } = require('express');
 const get = require('./get');
 const set = require('./set');
 const mode = require('./mode');
@@ -9,4 +8,4 @@ module.exports = {
   set,
   mode,
   salute,
-}
+};

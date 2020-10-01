@@ -5,6 +5,6 @@ const __blank = {
     // code goes here
   },
   help: 'blank command',
-}
+};
 
 module.exports = __blank;

@@ -10,7 +10,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   process.env.DB_URL = secrets.DB_URL;
   process.env.GOOGLE = secrets.GOOGLE;
   process.env.LOCAL_DEV_TOKEN = secrets.LOCAL_DEV_TOKEN;
-  process.env.LOCAL_DEV_URL = secrets.LOCAL_DEV_URL
+  process.env.LOCAL_DEV_URL = secrets.LOCAL_DEV_URL;
 }
 
 // write json file for piiiicky google
@@ -72,14 +72,14 @@ const io = ioServer(server, {
   allowRequest: (handshake, callback) => {
     const isValid = handshake.headers.authorization === process.env.LOCAL_DEV_TOKEN;
     callback(401, isValid);
-  }
+  },
 });
 
 // Init data into memory so we don't have to do this all the time
 Promise.all([
   testAuth(),
   getUserList(),
-  getChannelList()
+  getChannelList(),
 ]).then(() => {
   // Slack only allows you to add ONE SINGLE URL for a bot to get events
   // This is a TURBO BUMMER if you want to do local dev
@@ -106,8 +106,8 @@ Promise.all([
     // Init socket.io client
     const socket = ioClient(process.env.LOCAL_DEV_URL, {
       extraHeaders: {
-        Authorization: `${process.env.LOCAL_DEV_TOKEN}`
-      }
+        Authorization: `${process.env.LOCAL_DEV_TOKEN}`,
+      },
     });
 
     socket.on('connect', () => {

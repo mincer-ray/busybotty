@@ -8,6 +8,6 @@ const set = {
     sendMessage(event.channel, `storing ${dataArgs.join(' ')} as ${key}`);
   },
   help: 'sets data to firebase for retrieval with the GET command',
-}
+};
 
 module.exports = set;
