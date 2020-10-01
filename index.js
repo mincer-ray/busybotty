@@ -27,6 +27,7 @@ const firebaseAdmin = require('firebase-admin');
 
 // require our cool stuff (not junk)
 const handleEvent = require('./src/handlers/handleEvent');
+const testAuth = require('./src/util/testAuth');
 const getUserList = require('./src/util/getUserList');
 const getChannelList = require('./src/util/getChannelList');
 
@@ -74,7 +75,11 @@ const io = ioServer(server, {
 });
 
 // Init data into memory so we don't have to do this all the time
-Promise.all([getUserList(), getChannelList()]).then(() => {
+Promise.all([
+  testAuth(),
+  getUserList(),
+  getChannelList()
+]).then(() => {
   // Slack only allows you to add ONE SINGLE URL for a bot to get events
   // This is a TURBO BUMMER if you want to do local dev
   // We are doing a workaround here where the production app forwards events

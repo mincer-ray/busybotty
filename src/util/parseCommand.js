@@ -1,3 +1,4 @@
+const cache = require('memory-cache');
 const commands = require('../commands');
 
 const isValidCommand = (command) => {
@@ -9,7 +10,7 @@ const isValidCommand = (command) => {
 const parseCommand = (event) => {
   let command = null;
   const { text } = event;
-  const botName = '<@U01BF0S1YAH>';
+  const botName = `<@${cache.get('botname')}>`;
   const args = text.split(' ');
   const [first, second] = args;
 
