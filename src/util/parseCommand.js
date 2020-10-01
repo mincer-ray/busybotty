@@ -3,6 +3,8 @@ const commands = [
   'ping',
   'salute',
   'mode',
+  'get',
+  'set',
 ];
 
 const isValidCommand = (command) => commands.includes(command);
