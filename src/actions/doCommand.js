@@ -12,6 +12,7 @@ const doCommand = (command, event, database) => {
     });
     sendMessage(event.channel, helpSpam.join('\n'));
   } else {
+    // you should never see this
     sendMessage(event.channel, `command ${command.type} is somehow valid and also not?`);
   }
 };
