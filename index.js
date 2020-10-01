@@ -65,7 +65,12 @@ app.use(bodyParser.json());
 
 // Init socket.io server
 const server = createServer(app);
-const io = ioServer(server);
+const io = ioServer(server, {
+  allowRequest: (request, callback) => {
+    console.log('request', request);
+    callback(null, true);
+  }
+});
 
 // Init data into memory so we don't have to do this all the time
 Promise.all([getUserList(), getChannelList()]).then(() => {
