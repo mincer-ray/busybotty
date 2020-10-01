@@ -9,6 +9,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
   process.env.DB_URL = secrets.DB_URL;
   process.env.GOOGLE = secrets.GOOGLE;
+  process.env.LOCAL_DEV_TOKEN = secrets.LOCAL_DEV_TOKEN;
 }
 
 // write json file for piiiicky google
@@ -66,8 +67,8 @@ app.use(bodyParser.json());
 // Init socket.io server
 const server = createServer(app);
 const io = ioServer(server, {
-  allowRequest: (request, callback) => {
-    console.log('request', request);
+  allowRequest: (handshake, callback) => {
+    console.log('headers', handshake.headers);
     callback(null, true);
   }
 });
@@ -97,7 +98,11 @@ Promise.all([getUserList(), getChannelList()]).then(() => {
     // Instead we listen to the live version for events with
     // the socket.io client
     // Init socket.io client
-    const socket = ioClient('https://busybotty.herokuapp.com');
+    const socket = ioClient('https://busybotty.herokuapp.com', {
+      extraHeaders: {
+        Authorization: `Bearer ${process.env.LOCAL_DEV_TOKEN}`
+      }
+    });
 
     socket.on('connect', () => {
       console.log('*hacker voice* I\'m in');
