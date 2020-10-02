@@ -92,7 +92,10 @@ Promise.all([
       console.log('new connection');
     });
     slackEvents.on('message', (event) => {
-      io.send(event);
+      const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
+      if (isDevChannel) => {
+        io.send(event);
+      }
     });
     server.listen(port, () => {
       // Log a message when the server is ready
