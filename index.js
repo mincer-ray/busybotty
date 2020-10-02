@@ -90,7 +90,6 @@ Promise.all([
     // to the client for local dev
     io.on('connection', () => {
       console.log('new connection');
-      io.send('!!location confirmed, sending supplies!!');
     });
     slackEvents.on('message', (event) => {
       io.send(event);
