@@ -25,6 +25,7 @@ const { createEventAdapter } = require('@slack/events-api');
 const ioServer = require('socket.io');
 const ioClient = require('socket.io-client');
 const firebaseAdmin = require('firebase-admin');
+const cache = require('memory-cache');
 
 // require our cool stuff (not junk)
 const handleEvent = require('./src/handlers/handleEvent');
@@ -93,7 +94,7 @@ Promise.all([
     });
     slackEvents.on('message', (event) => {
       const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
-      if (isDevChannel) => {
+      if (isDevChannel) {
         io.send(event);
       }
     });
