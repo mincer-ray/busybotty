@@ -59,7 +59,6 @@ app.use('/bot/listen', slackEvents.requestListener());
 // event type that slackEvents.requestListener is waiting for
 // on the '/bot/listen' route
 slackEvents.on('message', (event) => {
-  console.log('recieved event', event);
   handleEvent(event, database);
   const channelName = cache.get('channels')[event.channel];
   console.log(`Received a message event: user ${event.user} in channel ${channelName} says ${event.text}`);
