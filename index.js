@@ -60,7 +60,8 @@ app.use('/bot/listen', slackEvents.requestListener());
 // on the '/bot/listen' route
 slackEvents.on('message', (event) => {
   handleEvent(event, database);
-  console.log(`Received a message event: user ${event.user} in channel ${event.channel} says ${event.text}`);
+  const channelName = cache.get('channels')[event.channel];
+  console.log(`Received a message event: user ${event.user} in channel ${channelName} says ${event.text}`);
 });
 
 // always put bodyParser after the slackEvents.requestListener in the middleware stack
