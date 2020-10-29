@@ -11,7 +11,7 @@ module.exports = {
   set,
   mode,
   salute,
-  givepoint,
-  losepoint,
+  '++': givepoint,
+  '--': losepoint,
   leaderboard,
 };
