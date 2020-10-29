@@ -20,7 +20,7 @@ const leaderboard = {
         });
 
         const sortedPoints = Array.from(pointValues).sort((a, b) => b - a).slice(0, 10);
-        const topList = sortedPoints.map((pointKey, index) => `${pointKey} ${usersByPoints[pointKey].join(', ')}`);
+        const topList = sortedPoints.map((pointKey) => `${pointKey} ${usersByPoints[pointKey].join(', ')}`);
 
         sendMessage(event.channel, `${topList.join('\n')}`);
       });
