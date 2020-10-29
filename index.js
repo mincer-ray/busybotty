@@ -2,7 +2,7 @@ const fs = require('fs');
 
 // Do secrets for dev mode
 if (process.env.BOT_ENV === 'DEVELOPMENT') {
-  console.log('DOIND SECRET');
+  console.log('Loading secrets');
   // eslint-disable-next-line
   const secrets = require('./secrets-local');
   process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
@@ -91,7 +91,7 @@ Promise.all([
     // AND we want to set up socket.io to send events it recieves
     // to the client for local dev
     io.on('connection', () => {
-      console.log('new connection');
+      console.log('New dev connection');
     });
     slackEvents.on('message', (event) => {
       const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
@@ -115,7 +115,7 @@ Promise.all([
     });
 
     socket.on('connect', () => {
-      console.log('*hacker voice* I\'m in');
+      console.log('Connected to dev proxy');
     });
     socket.on('message', (event) => {
       handleEvent(event, database);
