@@ -11,7 +11,8 @@ const parseCommand = (event) => {
   let command = null;
   const { text } = event;
   const botName = `<@${cache.get('botname')}>`;
-  const args = text.split(' ');
+  const normalWhitespace = text.replace(String.fromCharCode(160), ' ');
+  const args = normalWhitespace.split(' ');
   const [first, second] = args;
 
   if (first === botName) {
