@@ -5,6 +5,7 @@ if (process.env.BOT_ENV === 'DEVELOPMENT') {
   console.log('Loading secrets');
   // eslint-disable-next-line
   const secrets = require('./secrets-local');
+  process.env.SLACK_APP_TOKEN = secrets.SLACK_APP_TOKEN;
   process.env.SLACK_SIGNING_SECRET = secrets.SLACK_SIGNING_SECRET;
   process.env.SLACK_BOT_TOKEN = secrets.SLACK_BOT_TOKEN;
   process.env.DB_URL = secrets.DB_URL;
@@ -22,8 +23,7 @@ const { createServer } = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createEventAdapter } = require('@slack/events-api');
-const ioServer = require('socket.io');
-const ioClient = require('socket.io-client');
+const { SocketModeClient } = require('@slack/socket-mode');
 const firebaseAdmin = require('firebase-admin');
 const cache = require('memory-cache');
 
@@ -68,14 +68,8 @@ slackEvents.on('message', (event) => {
 // docs say if you dont do the right order everything breaks
 app.use(bodyParser.json());
 
-// Init socket.io server
+// Init server
 const server = createServer(app);
-const io = ioServer(server, {
-  allowRequest: (handshake, callback) => {
-    const isValid = handshake.headers.authorization === process.env.LOCAL_DEV_TOKEN;
-    callback(401, isValid);
-  },
-});
 
 // Init data into memory so we don't have to do this all the time
 Promise.all([
@@ -83,42 +77,24 @@ Promise.all([
   getUserList(),
   getChannelList(),
 ]).then(() => {
-  // Slack only allows you to add ONE SINGLE URL for a bot to get events
-  // This is a TURBO BUMMER if you want to do local dev
-  // We are doing a workaround here where the production app forwards events
   if (process.env.BOT_ENV === 'PRODUCTION') {
-    // If this is the production app we want to start up the server
-    // AND we want to set up socket.io to send events it recieves
-    // to the client for local dev
-    io.on('connection', () => {
-      console.log('New dev connection');
-    });
-    slackEvents.on('message', (event) => {
-      const isDevChannel = cache.get('channels')[event.channel] === 'busybotty-dev';
-      if (isDevChannel) {
-        io.send(event);
-      }
-    });
     server.listen(port, () => {
       // Log a message when the server is ready
       console.log(`Listening for events on ${server.address().port}`);
     });
   } else {
     // If we are in dev we don't bother starting the server
-    // Instead we listen to the live version for events with
-    // the socket.io client
-    // Init socket.io client
-    const socket = ioClient(process.env.LOCAL_DEV_URL, {
-      extraHeaders: {
-        Authorization: `${process.env.LOCAL_DEV_TOKEN}`,
-      },
-    });
+    // Instead we use socket mode
+    const appToken = process.env.SLACK_APP_TOKEN;
+    const socketModeClient = new SocketModeClient({ appToken });
 
-    socket.on('connect', () => {
-      console.log('Connected to dev proxy');
-    });
-    socket.on('message', (event) => {
+    socketModeClient.on('message', async ({ event, ack }) => {
+      ack();
       handleEvent(event, database);
     });
+
+    (async () => {
+      await socketModeClient.start();
+    })();
   }
 });
